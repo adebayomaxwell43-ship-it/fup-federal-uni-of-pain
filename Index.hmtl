@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FUP - Federal Uni of Pain | Founded by Maxwell</title>
+<style>
+:root{--bg:#0d0d14;--card:#1a1a28;--purple:#7c4dff;--orange:#ff7a3d;--grad:linear-gradient(135deg,#7c4dff,#ff7a3d)}
+body{margin:0;font-family:system-ui;background:var(--bg);color:#fff;max-width:480px;margin:0 auto;padding-bottom:90px}
+header{padding:20px;display:flex;justify-content:space-between;align-items:center}
+.logo{font-weight:900;font-size:22px} .logo span{color:var(--purple)}
+.wallet{margin:16px;background:var(--grad);border-radius:24px;padding:20px}
+.balance{font-size:42px;font-weight:800}
+.btn{background:#1a1a28;color:#fff;border:0;padding:12px 18px;border-radius:999px;font-weight:700;cursor:pointer}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:16px}
+.card{background:var(--card);border-radius:20px;padding:16px}
+.card h4{margin:8px 0 4px;color:var(--purple);font-size:18px}
+.card small{opacity:.6} .price{font-weight:800;margin-top:10px}
+.buy{background:var(--purple);border:0;color:#fff;padding:8px 18px;border-radius:999px;margin-top:10px;cursor:pointer}
+.nav{position:fixed;bottom:10px;left:50%;transform:translateX(-50%);background:#1e1e2e;display:flex;gap:20px;padding:12px 24px;border-radius:30px;width:90%;max-width:420px;justify-content:space-around;z-index:10}
+.nav button{background:0;border:0;color:#aaa;cursor:pointer}
+.chatbox{padding:16px} .msg{background:var(--card);padding:12px;border-radius:16px;margin:8px 0;max-width:80%}
+.msg.user{margin-left:auto;background:var(--purple)}
+.inputrow{display:flex;gap:8px;padding:16px} input{flex:1;background:var(--card);border:0;padding:14px;border-radius:999px;color:#fff}
+</style>
+</head>
+<body>
+<header><div class="logo">FUP <span>Federal Uni of Pain</span><div style="font-size:10px;opacity:.5">Founded by Maxwell</div></div><div>🔔 M</div></header>
+
+<div id="home">
+<div class="wallet"><h3>School Wallet</h3><div style="opacity:.7">Available balance</div><div class="balance">₦<span id="bal">20.00</span></div><br><button class="btn" onclick="addMoney()">+ Add money</button></div>
+</div>
+
+<div id="store"><div style="padding:16px"><h2>Course Store - Normal + Pain JOINED</h2><small>Sharpen your mind. Embrace the pain. Learn now.</small></div><div class="grid" id="courseGrid"></div></div>
+
+<div id="bella" style="display:none"><div style="padding:16px"><h2>Ask Bella - FUP Edition</h2><small>Try: I need PAIN 101 and PHY 107</small></div><div class="chatbox" id="chat"><div class="msg">Hi! I be Bella for FUP. Tell me courses you need!</div></div><div class="inputrow"><input id="chatInput" placeholder="Type courses..."><button class="btn" onclick="sendBella()">Send</button></div></div>
+
+<div id="orders" style="display:none"><div style="padding:16px"><h2>Orders</h2><div id="orderList">No orders yet</div></div></div>
+
+<div class="nav">
+<button onclick="document.getElementById('home').scrollIntoView()">🏠<br>Home</button>
+<button onclick="document.getElementById('store').scrollIntoView()">🛍️<br>Store</button>
+<button onclick="document.getElementById('bella').style.display='block';document.getElementById('bella').scrollIntoView()">✨<br>Ask Bella</button>
+<button onclick="document.getElementById('orders').style.display='block';document.getElementById('orders').scrollIntoView()">📦<br>Orders</button>
+</div>
+
+<script>
+const courses=[
+{code:"PAIN 101",name:"Introduction to Suffering",price:2000,level:"Beginner"},
+{code:"PHY 107",name:"General Physics",price:1500,level:"Intermediate"},
+{code:"CPT 507",name:"Advanced Programming",price:3000,level:"Advanced"},
+{code:"MAX 301",name:"Maxwell's Law",price:5000,level:"Advanced"},
+{code:"HRT 301",name:"Heartbreak Resilience",price:3850,level:"Beginner"},
+{code:"GNS 101",name:"Shege 101 - Survival",price:1200,level:"Beginner"}
+];
+let cart=[]; let balance=20;
+function renderCourses(){
+const g=document.getElementById('courseGrid');
+g.innerHTML=courses.map(c=>`<div class="card"><small>Level: ${c.level}</small><h4>${c.code}</h4><div>${c.name}</div><div class="price">₦${c.price}</div><button class="buy" onclick="addToCart('${c.code}')">Buy</button></div>`).join('');
+}
+function addToCart(code){const c=courses.find(x=>x.code===code); cart.push(c); alert(code+' added! Total: ₦'+cart.reduce((s,x)=>s+x.price,0)); renderOrders();}
+function addMoney(){let amt=prompt("How much?"); if(!amt) return; balance+=parseFloat(amt); document.getElementById('bal').innerText=balance.toFixed(2);}
+function sendBella(){const input=document.getElementById('chatInput'); const text=input.value.trim(); if(!text) return; const chat=document.getElementById('chat'); chat.innerHTML+=`<div class="msg user">${text}</div>`; input.value=''; let found=courses.filter(c=>text.toUpperCase().includes(c.code)); if(found.length){found.forEach(f=>cart.push(f)); let total=found.reduce((s,x)=>s+x.price,0); chat.innerHTML+=`<div class="msg">Found ${found.map(f=>f.code).join(', ')} - ₦${total}. Wallet: ₦${balance}. Added!</div>`; renderOrders();}else{chat.innerHTML+=`<div class="msg">Try PAIN 101, PHY 107, MAX 301, CPT 507, HRT 301, GNS 101</div>`;}}
+function renderOrders(){const list=document.getElementById('orderList'); if(cart.length===0){list.innerHTML="No orders yet"; return;} let total=cart.reduce((s,x)=>s+x.price,0); list.innerHTML=cart.map(c=>`<div>${c.code} - ${c.name} - ₦${c.price}</div>`).join('')+`<br><b>Total: ₦${total}</b><br><button class="buy" onclick="checkout()">Checkout</button>`;}
+function checkout(){let total=cart.reduce((s,x)=>s+x.price,0); if(balance<total){alert("Insufficient! Need ₦"+total+" you get ₦"+balance); return;} balance-=total; document.getElementById('bal').innerText=balance.toFixed(2); cart=[]; renderOrders(); alert("Order successful! Pain delivered 😂");}
+renderCourses();
+</script>
+</body>
+</html>
