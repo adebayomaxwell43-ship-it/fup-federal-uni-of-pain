@@ -1,69 +1,108 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FUP - Federal Uni of Pain | Founded by Maxwell</title>
+<title>FUP REAL - Opay + Moniepoint</title>
 <style>
-:root{--bg:#0d0d14;--card:#1a1a28;--purple:#7c4dff;--orange:#ff7a3d;--grad:linear-gradient(135deg,#7c4dff,#ff7a3d)}
-body{margin:0;font-family:system-ui;background:var(--bg);color:#fff;max-width:480px;margin:0 auto;padding-bottom:90px}
-header{padding:20px;display:flex;justify-content:space-between;align-items:center}
-.logo{font-weight:900;font-size:22px} .logo span{color:var(--purple)}
-.wallet{margin:16px;background:var(--grad);border-radius:24px;padding:20px}
-.balance{font-size:42px;font-weight:800}
-.btn{background:#1a1a28;color:#fff;border:0;padding:12px 18px;border-radius:999px;font-weight:700;cursor:pointer}
+*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui}
+body{background:#0a0a12;color:white;max-width:480px;margin:0 auto;padding-bottom:120px}
+.header{padding:20px;font-weight:900;font-size:20px;line-height:1.1}
+.header span{color:#8b5cf6}
+.wallet{margin:16px;background:linear-gradient(135deg,#7c3aed,#f97316);border-radius:24px;padding:20px}
+.balance{font-size:42px;font-weight:900}
+.btn{background:#0a0a12;color:white;border:none;padding:12px 18px;border-radius:999px;font-weight:700;cursor:pointer;display:inline-block;margin-top:10px}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:16px}
-.card{background:var(--card);border-radius:20px;padding:16px}
-.card h4{margin:8px 0 4px;color:var(--purple);font-size:18px}
-.card small{opacity:.6} .price{font-weight:800;margin-top:10px}
-.buy{background:var(--purple);border:0;color:#fff;padding:8px 18px;border-radius:999px;margin-top:10px;cursor:pointer}
-.nav{position:fixed;bottom:10px;left:50%;transform:translateX(-50%);background:#1e1e2e;display:flex;gap:20px;padding:12px 24px;border-radius:30px;width:90%;max-width:420px;justify-content:space-around;z-index:10}
-.nav button{background:0;border:0;color:#aaa;cursor:pointer}
-.chatbox{padding:16px} .msg{background:var(--card);padding:12px;border-radius:16px;margin:8px 0;max-width:80%}
-.msg.user{margin-left:auto;background:var(--purple)}
-.inputrow{display:flex;gap:8px;padding:16px} input{flex:1;background:var(--card);border:0;padding:14px;border-radius:999px;color:#fff}
+.course{background:#15151f;border-radius:16px;padding:14px;border:1px solid #2a2a3a}
+.buy{background:#8b5cf6;border:none;color:white;padding:8px 16px;border-radius:999px;cursor:pointer;float:right;font-weight:700}
+.cart{margin:16px;background:#15151f;padding:16px;border-radius:16px;position:sticky;bottom:20px;border:1px solid #333}
+.checkout{background:#22c55e;border:none;padding:14px;border-radius:999px;color:white;font-weight:800;width:100%;margin-top:10px;cursor:pointer}
+.opay-box{background:#1a1a2e;border:2px dashed #8b5cf6;border-radius:16px;padding:16px;margin:16px;text-align:center}
+.copy{color:#f97316;text-decoration:underline;cursor:pointer;font-weight:800}
 </style>
 </head>
 <body>
-<header><div class="logo">FUP <span>Federal Uni of Pain</span><div style="font-size:10px;opacity:.5">Founded by Maxwell</div></div><div>🔔 M</div></header>
+<div class="header">FUP <span>REAL MONEY - OPAY + MONIEPOINT</span><br><small style="font-size:9px;color:#aaa">OPAY / MONIEPOINT - Adebayo Maxwell Iyiola - 8083941964</small></div>
 
-<div id="home">
-<div class="wallet"><h3>School Wallet</h3><div style="opacity:.7">Available balance</div><div class="balance">₦<span id="bal">20.00</span></div><br><button class="btn" onclick="addMoney()">+ Add money</button></div>
+<div class="wallet">
+<div>School Wallet (REAL)</div>
+<div style="opacity:.8;font-size:12px">Real balance - Transfer to 8083941964</div>
+<div class="balance">₦<span id="bal">0</span></div>
+<button class="btn" onclick="showOpay()">+ Add Money via OPAY / MONIEPOINT</button>
 </div>
 
-<div id="store"><div style="padding:16px"><h2>Course Store - Normal + Pain JOINED</h2><small>Sharpen your mind. Embrace the pain. Learn now.</small></div><div class="grid" id="courseGrid"></div></div>
+<div id="opayModal" class="opay-box" style="display:none">
+<h3 style="color:#f97316">💳 REAL TRANSFER</h3>
+<p style="margin:12px 0;line-height:1.8">
+Account Name: <b>Adebayo Maxwell Iyiola</b><br>
+Bank 1: <b>OPAY</b><br>
+Account No: <b style="font-size:22px;letter-spacing:2px">8083941964</b> <span class="copy" onclick="copyNum()">COPY</span><br><br>
+Bank 2: <b>MONIEPOINT MFB</b><br>
+Account No: <b style="font-size:22px;letter-spacing:2px">8083941964</b> <span class="copy" onclick="copyNum()">COPY</span><br>
+<small style="color:#aaa">Same number works for both banks!</small>
+</p>
+<input id="amt" type="number" placeholder="How much you transfer? e.g 2000" style="width:100%;padding:12px;border-radius:12px;border:1px solid #333;background:#0a0a12;color:white;margin-top:10px">
+<button class="btn" style="background:#22c55e;width:100%" onclick="confirmPay()">I HAVE TRANSFERRED ✅</button>
+<button class="btn" style="background:#333;width:100%" onclick="hideOpay()">Cancel</button>
+</div>
 
-<div id="bella" style="display:none"><div style="padding:16px"><h2>Ask Bella - FUP Edition</h2><small>Try: I need PAIN 101 and PHY 107</small></div><div class="chatbox" id="chat"><div class="msg">Hi! I be Bella for FUP. Tell me courses you need!</div></div><div class="inputrow"><input id="chatInput" placeholder="Type courses..."><button class="btn" onclick="sendBella()">Send</button></div></div>
+<div style="padding:0 16px"><h3>Course Store — Normal + Pain Joined</h3></div>
+<div class="grid" id="grid"></div>
 
-<div id="orders" style="display:none"><div style="padding:16px"><h2>Orders</h2><div id="orderList">No orders yet</div></div></div>
-
-<div class="nav">
-<button onclick="document.getElementById('home').scrollIntoView()">🏠<br>Home</button>
-<button onclick="document.getElementById('store').scrollIntoView()">🛍️<br>Store</button>
-<button onclick="document.getElementById('bella').style.display='block';document.getElementById('bella').scrollIntoView()">✨<br>Ask Bella</button>
-<button onclick="document.getElementById('orders').style.display='block';document.getElementById('orders').scrollIntoView()">📦<br>Orders</button>
+<div class="cart">
+<b>🛒 Cart (<span id="cartCount">0</span>)</b>
+<div id="cartList" style="margin-top:8px;color:#aaa;font-size:13px">Empty — Click Buy</div>
+<div style="margin-top:10px;display:flex;justify-content:space-between"><span>Total: ₦<span id="total">0</span></span><span>Wallet: ₦<span id="bal2">0</span></span></div>
+<button class="checkout" onclick="buyNow()">PAY WITH WALLET (REAL MONEY)</button>
+<div id="receipt" style="margin-top:10px;color:#22c55e;font-size:13px"></div>
 </div>
 
 <script>
-const courses=[
-{code:"PAIN 101",name:"Introduction to Suffering",price:2000,level:"Beginner"},
-{code:"PHY 107",name:"General Physics",price:1500,level:"Intermediate"},
-{code:"CPT 507",name:"Advanced Programming",price:3000,level:"Advanced"},
-{code:"MAX 301",name:"Maxwell's Law",price:5000,level:"Advanced"},
-{code:"HRT 301",name:"Heartbreak Resilience",price:3850,level:"Beginner"},
-{code:"GNS 101",name:"Shege 101 - Survival",price:1200,level:"Beginner"}
+let balance=parseInt(localStorage.getItem('fup_real_bal')||'0');
+let courses=[
+{id:"PAIN 101",name:"Introduction to Suffering",price:2000},
+{id:"PHY 107",name:"General Physics",price:1500},
+{id:"CPT 507",name:"Advanced Programming",price:3000},
+{id:"MAX 301",name:"Maxwell's Law",price:5000},
+{id:"HRT 301",name:"Heartbreak Resilience",price:3850},
+{id:"GNS 101",name:"Shege 101 - Survival",price:1200},
 ];
-let cart=[]; let balance=20;
-function renderCourses(){
-const g=document.getElementById('courseGrid');
-g.innerHTML=courses.map(c=>`<div class="card"><small>Level: ${c.level}</small><h4>${c.code}</h4><div>${c.name}</div><div class="price">₦${c.price}</div><button class="buy" onclick="addToCart('${c.code}')">Buy</button></div>`).join('');
+let cart=[];
+function render(){
+ document.getElementById('bal').innerText=balance;
+ document.getElementById('bal2').innerText=balance;
+ document.getElementById('grid').innerHTML=courses.map(c=>`<div class="course"><h4 style="color:#a78bfa">${c.id}</h4><p style="font-size:12px;color:#aaa;height:30px">${c.name}</p><div style="margin-top:10px"><b>₦${c.price}</b><button class="buy" onclick="addCart('${c.id}')">Buy</button></div></div>`).join('');
 }
-function addToCart(code){const c=courses.find(x=>x.code===code); cart.push(c); alert(code+' added! Total: ₦'+cart.reduce((s,x)=>s+x.price,0)); renderOrders();}
-function addMoney(){let amt=prompt("How much?"); if(!amt) return; balance+=parseFloat(amt); document.getElementById('bal').innerText=balance.toFixed(2);}
-function sendBella(){const input=document.getElementById('chatInput'); const text=input.value.trim(); if(!text) return; const chat=document.getElementById('chat'); chat.innerHTML+=`<div class="msg user">${text}</div>`; input.value=''; let found=courses.filter(c=>text.toUpperCase().includes(c.code)); if(found.length){found.forEach(f=>cart.push(f)); let total=found.reduce((s,x)=>s+x.price,0); chat.innerHTML+=`<div class="msg">Found ${found.map(f=>f.code).join(', ')} - ₦${total}. Wallet: ₦${balance}. Added!</div>`; renderOrders();}else{chat.innerHTML+=`<div class="msg">Try PAIN 101, PHY 107, MAX 301, CPT 507, HRT 301, GNS 101</div>`;}}
-function renderOrders(){const list=document.getElementById('orderList'); if(cart.length===0){list.innerHTML="No orders yet"; return;} let total=cart.reduce((s,x)=>s+x.price,0); list.innerHTML=cart.map(c=>`<div>${c.code} - ${c.name} - ₦${c.price}</div>`).join('')+`<br><b>Total: ₦${total}</b><br><button class="buy" onclick="checkout()">Checkout</button>`;}
-function checkout(){let total=cart.reduce((s,x)=>s+x.price,0); if(balance<total){alert("Insufficient! Need ₦"+total+" you get ₦"+balance); return;} balance-=total; document.getElementById('bal').innerText=balance.toFixed(2); cart=[]; renderOrders(); alert("Order successful! Pain delivered 😂");}
-renderCourses();
+function addCart(id){let c=courses.find(x=>x.id===id); if(!cart.find(x=>x.id===id))cart.push(c); update();}
+function update(){document.getElementById('cartCount').innerText=cart.length; document.getElementById('total').innerText=cart.reduce((a,b)=>a+b.price,0); document.getElementById('cartList').innerHTML=cart.length?cart.map(c=>`• ${c.id} — ₦${c.price}`).join('<br>'):'Empty';}
+function showOpay(){document.getElementById('opayModal').style.display='block'; window.scrollTo(0,0);}
+function hideOpay(){document.getElementById('opayModal').style.display='none';}
+function copyNum(){navigator.clipboard.writeText('8083941964'); alert('8083941964 copied! Works for OPAY & MONIEPOINT');}
+function confirmPay(){
+ let amt=parseInt(document.getElementById('amt').value);
+ if(!amt || amt<100){alert('Enter valid amount'); return;}
+ balance+=amt;
+ localStorage.setItem('fup_real_bal', balance);
+ document.getElementById('bal').innerText=balance;
+ document.getElementById('bal2').innerText=balance;
+ document.getElementById('receipt').innerHTML=`✅ REAL ₦${amt} ADDED!<br>To: 8083941964<br>OPAY / MONIEPOINT - Adebayo Maxwell Iyiola<br>Confirm for your Opay/Moniepoint app`;
+ hideOpay();
+ let msg=`FUP PAYMENT ALERT: I just transferred ₦${amt} to your account 8083941964 (OPAY/MONIEPOINT). Please confirm.`;
+ window.open(`https://wa.me/2348083941964?text=${encodeURIComponent(msg)}`, '_blank');
+}
+function buyNow(){
+ let total=cart.reduce((a,b)=>a+b.price,0);
+ if(cart.length==0){alert('Cart empty'); return;}
+ if(balance<total){alert(`You need ₦${total}, you get ₦${balance}. Transfer to 8083941964 (OPAY/MONIEPOINT) first`); showOpay(); return;}
+ balance-=total;
+ localStorage.setItem('fup_real_bal', balance);
+ document.getElementById('bal').innerText=balance;
+ document.getElementById('bal2').innerText=balance;
+ document.getElementById('receipt').innerHTML=`✅ REAL PURCHASE! ₦${total}<br>Courses: ${cart.map(c=>c.id).join(', ')}<br>Money received in 8083941964 (OPAY/MONIEPOINT)<br>FUP ID: FUP-${Date.now().toString().slice(-6)}`;
+ alert(`Payment successful! ₦${total} - Check your Opay/Moniepoint 8083941964`);
+ cart=[]; update();
+}
+render(); update();
 </script>
 </body>
 </html>
