@@ -3,105 +3,182 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FUP REAL - Opay + Moniepoint</title>
+<title>FUP - Federal University of Pain</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui}
 body{background:#0a0a12;color:white;max-width:480px;margin:0 auto;padding-bottom:120px}
-.header{padding:20px;font-weight:900;font-size:20px;line-height:1.1}
-.header span{color:#8b5cf6}
-.wallet{margin:16px;background:linear-gradient(135deg,#7c3aed,#f97316);border-radius:24px;padding:20px}
-.balance{font-size:42px;font-weight:900}
-.btn{background:#0a0a12;color:white;border:none;padding:12px 18px;border-radius:999px;font-weight:700;cursor:pointer;display:inline-block;margin-top:10px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:16px}
-.course{background:#15151f;border-radius:16px;padding:14px;border:1px solid #2a2a3a}
-.buy{background:#8b5cf6;border:none;color:white;padding:8px 16px;border-radius:999px;cursor:pointer;float:right;font-weight:700}
-.cart{margin:16px;background:#15151f;padding:16px;border-radius:16px;position:sticky;bottom:20px;border:1px solid #333}
-.checkout{background:#22c55e;border:none;padding:14px;border-radius:999px;color:white;font-weight:800;width:100%;margin-top:10px;cursor:pointer}
-.opay-box{background:#1a1a2e;border:2px dashed #8b5cf6;border-radius:16px;padding:16px;margin:16px;text-align:center}
-.copy{color:#f97316;text-decoration:underline;cursor:pointer;font-weight:800}
+.header{padding:20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1a1a2e}
+.logo{font-weight:900;font-size:18px}
+.logo b{color:#8b5cf6}
+.wallet{margin:16px;background:linear-gradient(135deg,#7c3aed,#f97316);border-radius:20px;padding:20px}
+.balance{font-size:36px;font-weight:900;margin:5px 0}
+.btn{background:#0a0a12;color:white;border:none;padding:10px 16px;border-radius:999px;font-weight:700;cursor:pointer;font-size:13px}
+.bella-box{margin:16px;background:#15151f;border-radius:16px;padding:14px;border:1px solid #222}
+.bella-input{width:100%;background:#0a0a12;border:1px solid #333;padding:11px;border-radius:12px;color:white;margin-top:8px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px}
+.course{background:#15151f;border-radius:14px;padding:12px;border:1px solid #222}
+.buy{background:#8b5cf6;border:none;color:white;padding:6px 14px;border-radius:999px;cursor:pointer;float:right;font-size:12px;font-weight:700}
+.buy.added{background:#22c55e}
+.cart{margin:16px;background:#15151f;padding:14px;border-radius:16px;border:1px solid #333;position:sticky;bottom:20px}
+.checkout{background:#f97316;border:none;padding:12px;border-radius:999px;color:white;font-weight:800;width:100%;margin-top:10px;cursor:pointer}
+.modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.9);display:none;align-items:center;justify-content:center;padding:20px;z-index:999}
+.modal-box{background:#15151f;border-radius:20px;padding:20px;width:100%;max-width:400px;border:1px solid #333}
+.input{width:100%;padding:12px;border-radius:12px;border:1px solid #333;background:#0a0a12;color:white;margin:8px 0}
+.pending{background:#332a00;color:#facc15;padding:8px;border-radius:8px;font-size:11px;margin-top:8px}
 </style>
 </head>
 <body>
-<div class="header">FUP <span>REAL MONEY - OPAY + MONIEPOINT</span><br><small style="font-size:9px;color:#aaa">OPAY / MONIEPOINT - Adebayo Maxwell Iyiola - 8083941964</small></div>
+<div class="header">
+<div class="logo"><b>FUP</b> FEDERAL UNIVERSITY OF PAIN<br><small style="font-size:8px;color:#888">EST. BY ADEBAYO MAXWELL IYIOLA</small></div>
+<div style="font-size:10px;background:#1e1e2e;padding:6px 10px;border-radius:999px">ID: <span id="studId">FUP-0000</span></div>
+</div>
 
 <div class="wallet">
-<div>School Wallet (REAL)</div>
-<div style="opacity:.8;font-size:12px">Real balance - Transfer to 8083941964</div>
-<div class="balance">₦<span id="bal">0</span></div>
-<button class="btn" onclick="showOpay()">+ Add Money via OPAY / MONIEPOINT</button>
+<div style="font-size:12px;opacity:.8">Wallet Balance</div>
+<div class="balance">₦<span id="bal">0.00</span></div>
+<div style="font-size:11px;opacity:.7">Enrolled: <span id="enrolledCount">0</span> courses</div>
+<div style="margin-top:12px;display:flex;gap:8px">
+<button class="btn" onclick="openFunding()">+ Fund Wallet</button>
+<button class="btn" style="background:#1e1e2e" onclick="showHistory()">History</button>
+</div>
+<div id="pendingNotice" style="display:none" class="pending">⏳ You have pending funding waiting for admin approval</div>
 </div>
 
-<div id="opayModal" class="opay-box" style="display:none">
-<h3 style="color:#f97316">💳 REAL TRANSFER</h3>
-<p style="margin:12px 0;line-height:1.8">
-Account Name: <b>Adebayo Maxwell Iyiola</b><br>
-Bank 1: <b>OPAY</b><br>
-Account No: <b style="font-size:22px;letter-spacing:2px">8083941964</b> <span class="copy" onclick="copyNum()">COPY</span><br><br>
-Bank 2: <b>MONIEPOINT MFB</b><br>
-Account No: <b style="font-size:22px;letter-spacing:2px">8083941964</b> <span class="copy" onclick="copyNum()">COPY</span><br>
-<small style="color:#aaa">Same number works for both banks!</small>
-</p>
-<input id="amt" type="number" placeholder="How much you transfer? e.g 2000" style="width:100%;padding:12px;border-radius:12px;border:1px solid #333;background:#0a0a12;color:white;margin-top:10px">
-<button class="btn" style="background:#22c55e;width:100%" onclick="confirmPay()">I HAVE TRANSFERRED ✅</button>
-<button class="btn" style="background:#333;width:100%" onclick="hideOpay()">Cancel</button>
+<div class="bella-box">
+<b>Ask Bella 🤖</b> <small style="color:#888">FUP AI Assistant</small>
+<input id="bellaInput" class="bella-input" placeholder="e.g I need PAIN 101 and PHY 107">
+<div id="bellaResp" style="margin-top:8px;color:#a78bfa;font-size:13px"></div>
 </div>
 
-<div style="padding:0 16px"><h3>Course Store — Normal + Pain Joined</h3></div>
+<div style="padding:0 16px;display:flex;justify-content:space-between"><h3 style="font-size:15px">Available Courses</h3><small style="color:#888">Normal + Pain Joined</small></div>
 <div class="grid" id="grid"></div>
 
 <div class="cart">
-<b>🛒 Cart (<span id="cartCount">0</span>)</b>
-<div id="cartList" style="margin-top:8px;color:#aaa;font-size:13px">Empty — Click Buy</div>
-<div style="margin-top:10px;display:flex;justify-content:space-between"><span>Total: ₦<span id="total">0</span></span><span>Wallet: ₦<span id="bal2">0</span></span></div>
-<button class="checkout" onclick="buyNow()">PAY WITH WALLET (REAL MONEY)</button>
-<div id="receipt" style="margin-top:10px;color:#22c55e;font-size:13px"></div>
+<div style="display:flex;justify-content:space-between"><b>🛒 Cart (<span id="cartCount">0</span>)</b><span style="color:#888;cursor:pointer;font-size:12px" onclick="clearCart()">Clear</span></div>
+<div id="cartList" style="margin-top:8px;color:#888;font-size:12px">No courses selected</div>
+<div style="margin-top:10px;display:flex;justify-content:space-between;font-size:13px"><b>Total: ₦<span id="total">0</span></b><span>Bal: ₦<span id="bal2">0</span></span></div>
+<button class="checkout" onclick="checkout()">Enroll Now</button>
+<div id="receipt" style="margin-top:8px;font-size:11px"></div>
+</div>
+
+<!-- FUNDING MODAL -->
+<div id="fundModal" class="modal">
+<div class="modal-box">
+<h3>Fund Wallet</h3>
+<p style="font-size:13px;margin:10px 0;line-height:1.6;background:#0a0a12;padding:12px;border-radius:12px">
+Account Name: <b>Adebayo Maxwell Iyiola</b><br>
+Bank: <b>OPAY</b> - <b>8083941964</b><br>
+Bank: <b>MONIEPOINT</b> - <b>8083941964</b><br>
+<small style="color:#888">Same number for both. Transfer then fill below.</small>
+</p>
+<input id="fundAmt" class="input" type="number" placeholder="Amount you transferred (e.g 2000)">
+<input id="fundRef" class="input" type="text" placeholder="Transaction reference / Sender name">
+<button class="btn" style="background:#22c55e;width:100%;padding:12px" onclick="submitFunding()">Submit for Approval</button>
+<button class="btn" style="background:#222;width:100%;margin-top:8px" onclick="closeFunding()">Cancel</button>
+</div>
+</div>
+
+<!-- ADMIN PANEL (SECRET) -->
+<div id="adminPanel" style="display:none;padding:16px">
+<h2>🔐 FUP Admin - Maxwell Only</h2>
+<p style="font-size:12px;color:#888">Check your real Opay/Moniepoint app (8083941964) then approve</p>
+<div id="adminList" style="margin-top:16px"></div>
+<button class="btn" onclick="location.href=location.pathname">Back to Store</button>
 </div>
 
 <script>
-let balance=parseInt(localStorage.getItem('fup_real_bal')||'0');
+let studentId = localStorage.getItem('fup_id') || 'FUP-'+Math.floor(1000+Math.random()*9000);
+localStorage.setItem('fup_id', studentId);
+document.getElementById('studId').innerText=studentId;
+
+let balance = parseInt(localStorage.getItem('fup_bal')||'0');
+let enrolled = JSON.parse(localStorage.getItem('fup_enrolled')||'[]');
+let pendings = JSON.parse(localStorage.getItem('fup_pendings')||'[]');
 let courses=[
-{id:"PAIN 101",name:"Introduction to Suffering",price:2000},
-{id:"PHY 107",name:"General Physics",price:1500},
-{id:"CPT 507",name:"Advanced Programming",price:3000},
-{id:"MAX 301",name:"Maxwell's Law",price:5000},
-{id:"HRT 301",name:"Heartbreak Resilience",price:3850},
-{id:"GNS 101",name:"Shege 101 - Survival",price:1200},
+{id:"PAIN 101",name:"Introduction to Suffering",price:2000,level:"Beginner"},
+{id:"PHY 107",name:"General Physics",price:1500,level:"Intermediate"},
+{id:"CPT 507",name:"Advanced Programming",price:3000,level:"Advanced"},
+{id:"MAX 301",name:"Maxwell's Law",price:5000,level:"Advanced"},
+{id:"HRT 301",name:"Heartbreak Resilience",price:3850,level:"Beginner"},
+{id:"GNS 101",name:"Shege 101 - Survival",price:1200,level:"Beginner"},
 ];
 let cart=[];
+
+// CHECK IF ADMIN MODE ?admin=FUP2024
+const urlParams = new URLSearchParams(window.location.search);
+if(urlParams.get('admin')==='FUP2024'){
+ document.body.innerHTML=document.getElementById('adminPanel').outerHTML;
+ document.getElementById('adminPanel').style.display='block';
+ renderAdmin();
+}
+
 function render(){
- document.getElementById('bal').innerText=balance;
+ document.getElementById('bal').innerText=balance.toFixed(2);
  document.getElementById('bal2').innerText=balance;
- document.getElementById('grid').innerHTML=courses.map(c=>`<div class="course"><h4 style="color:#a78bfa">${c.id}</h4><p style="font-size:12px;color:#aaa;height:30px">${c.name}</p><div style="margin-top:10px"><b>₦${c.price}</b><button class="buy" onclick="addCart('${c.id}')">Buy</button></div></div>`).join('');
+ document.getElementById('enrolledCount').innerText=enrolled.length;
+ if(pendings.length>0) document.getElementById('pendingNotice').style.display='block';
+ let g=document.getElementById('grid'); g.innerHTML='';
+ courses.forEach(c=>{
+  let inCart=cart.find(x=>x.id===c.id);
+  let isEnrolled=enrolled.find(x=>x.id===c.id);
+  g.innerHTML+=`<div class="course"><small style="background:#222;padding:2px 6px;border-radius:999px;font-size:9px">${c.level}</small> ${isEnrolled?'<small style="background:#22c55e;padding:2px 6px;border-radius:999px;font-size:9px;color:black">ENROLLED</small>':''}<h4 style="color:#a78bfa;margin-top:5px;font-size:13px">${c.id}</h4><p style="font-size:11px;color:#888;height:28px">${c.name}</p><div style="margin-top:8px"><b style="font-size:12px">₦${c.price}</b><button class="buy ${inCart?'added':''}" ${isEnrolled?'disabled style="background:#333"':''} onclick="toggleCart('${c.id}')">${isEnrolled?'✓ Done':inCart?'✓ Added':'Buy'}</button></div></div>`;
+ });
 }
-function addCart(id){let c=courses.find(x=>x.id===id); if(!cart.find(x=>x.id===id))cart.push(c); update();}
-function update(){document.getElementById('cartCount').innerText=cart.length; document.getElementById('total').innerText=cart.reduce((a,b)=>a+b.price,0); document.getElementById('cartList').innerHTML=cart.length?cart.map(c=>`• ${c.id} — ₦${c.price}`).join('<br>'):'Empty';}
-function showOpay(){document.getElementById('opayModal').style.display='block'; window.scrollTo(0,0);}
-function hideOpay(){document.getElementById('opayModal').style.display='none';}
-function copyNum(){navigator.clipboard.writeText('8083941964'); alert('8083941964 copied! Works for OPAY & MONIEPOINT');}
-function confirmPay(){
- let amt=parseInt(document.getElementById('amt').value);
- if(!amt || amt<100){alert('Enter valid amount'); return;}
- balance+=amt;
- localStorage.setItem('fup_real_bal', balance);
- document.getElementById('bal').innerText=balance;
- document.getElementById('bal2').innerText=balance;
- document.getElementById('receipt').innerHTML=`✅ REAL ₦${amt} ADDED!<br>To: 8083941964<br>OPAY / MONIEPOINT - Adebayo Maxwell Iyiola<br>Confirm for your Opay/Moniepoint app`;
- hideOpay();
- let msg=`FUP PAYMENT ALERT: I just transferred ₦${amt} to your account 8083941964 (OPAY/MONIEPOINT). Please confirm.`;
- window.open(`https://wa.me/2348083941964?text=${encodeURIComponent(msg)}`, '_blank');
+function toggleCart(id){ if(enrolled.find(x=>x.id===id)) return; let c=courses.find(x=>x.id===id); let idx=cart.findIndex(x=>x.id===id); if(idx>-1)cart.splice(idx,1); else cart.push(c); update(); render();}
+function update(){ document.getElementById('cartCount').innerText=cart.length; document.getElementById('total').innerText=cart.reduce((a,b)=>a+b.price,0); document.getElementById('cartList').innerHTML=cart.length?cart.map(c=>`• ${c.id} — ₦${c.price}`).join('<br>'):'No courses selected'; }
+function openFunding(){ document.getElementById('fundModal').style.display='flex'; }
+function closeFunding(){ document.getElementById('fundModal').style.display='none'; }
+function submitFunding(){
+ let amt=parseInt(document.getElementById('fundAmt').value);
+ let ref=document.getElementById('fundRef').value;
+ if(!amt||amt<100){alert('Enter amount');return;}
+ if(!ref){alert('Enter reference or your name');return;}
+ pendings.push({id:Date.now(),amount:amt,ref:ref,student:studentId,date:new Date().toLocaleString(),status:'pending'});
+ localStorage.setItem('fup_pendings', JSON.stringify(pendings));
+ closeFunding();
+ document.getElementById('pendingNotice').style.display='block';
+ document.getElementById('receipt').innerHTML=`<span style="color:#facc15">⏳ Funding request submitted! ₦${amt}<br>Ref: ${ref}<br>Waiting for admin (Maxwell) to confirm in Opay 8083941964 app. You go get alert when approved.</span>`;
+ let msg=`FUP FUNDING: Student ${studentId} transferred ₦${amt} to 8083941964 (OPAY/MONIEPOINT). Ref: ${ref}. Approve at your admin panel.`;
+ window.open(`https://wa.me/2348083941964?text=${encodeURIComponent(msg)}`,'_blank');
+ document.getElementById('fundAmt').value=''; document.getElementById('fundRef').value='';
 }
-function buyNow(){
+function checkout(){
  let total=cart.reduce((a,b)=>a+b.price,0);
- if(cart.length==0){alert('Cart empty'); return;}
- if(balance<total){alert(`You need ₦${total}, you get ₦${balance}. Transfer to 8083941964 (OPAY/MONIEPOINT) first`); showOpay(); return;}
- balance-=total;
- localStorage.setItem('fup_real_bal', balance);
- document.getElementById('bal').innerText=balance;
- document.getElementById('bal2').innerText=balance;
- document.getElementById('receipt').innerHTML=`✅ REAL PURCHASE! ₦${total}<br>Courses: ${cart.map(c=>c.id).join(', ')}<br>Money received in 8083941964 (OPAY/MONIEPOINT)<br>FUP ID: FUP-${Date.now().toString().slice(-6)}`;
- alert(`Payment successful! ₦${total} - Check your Opay/Moniepoint 8083941964`);
- cart=[]; update();
+ if(cart.length==0){alert('Cart empty');return;}
+ if(total>balance){alert(`Insufficient! You need ₦${total}, you have ₦${balance}. Fund wallet first via 8083941964`); openFunding(); return;}
+ balance-=total; enrolled.push(...cart);
+ localStorage.setItem('fup_bal',balance); localStorage.setItem('fup_enrolled',JSON.stringify(enrolled));
+ document.getElementById('receipt').innerHTML=`<span style="color:#22c55e">✅ Enrolled! ₦${total} paid<br>Courses: ${cart.map(c=>c.id).join(', ')}<br>ID: ${studentId}</span>`;
+ cart=[]; update(); render();
 }
+function clearCart(){cart=[];update();render();}
+function showHistory(){ alert(`Student: ${studentId}\nBalance: ₦${balance}\nEnrolled: ${enrolled.map(c=>c.id).join(', ')||'None'}\nPending: ${pendings.length} funding`); }
+
+// ADMIN
+function renderAdmin(){
+ let all = JSON.parse(localStorage.getItem('fup_pendings')||'[]');
+ let bal = parseInt(localStorage.getItem('fup_bal')||'0');
+ document.getElementById('adminList').innerHTML = all.length? all.map(p=>`
+ <div style="background:#15151f;padding:12px;border-radius:12px;margin-bottom:10px;border:1px solid #333">
+ <b>₦${p.amount}</b> - ${p.student}<br>
+ <small>Ref: ${p.ref} | ${p.date} | Status: ${p.status}</small><br>
+ <div style="margin-top:8px;display:flex;gap:8px">
+ <button class="btn" style="background:#22c55e" onclick="approveFunding(${p.id})">Approve + Add ₦${p.amount}</button>
+ <button class="btn" style="background:#ef4444" onclick="rejectFunding(${p.id})">Reject</button>
+ </div>
+ </div>`).join('') : '<p style="color:#888">No pending funding</p>' + `<br><p>Current wallet: ₦${bal}</p>`;
+}
+function approveFunding(id){
+ let all=JSON.parse(localStorage.getItem('fup_pendings')||'[]');
+ let p=all.find(x=>x.id===id);
+ if(p){ let bal=parseInt(localStorage.getItem('fup_bal')||'0'); bal+=p.amount; localStorage.setItem('fup_bal',bal); all=all.filter(x=>x.id!==id); localStorage.setItem('fup_pendings',JSON.stringify(all)); alert(`Approved ₦${p.amount} for ${p.student}. Check your Opay 8083941964 to confirm money entered.`); location.reload(); }
+}
+function rejectFunding(id){ let all=JSON.parse(localStorage.getItem('fup_pendings')||'[]'); all=all.filter(x=>x.id!==id); localStorage.setItem('fup_pendings',JSON.stringify(all)); location.reload(); }
+
+document.getElementById('bellaInput').addEventListener('keydown',function(e){
+ if(e.key==='Enter'){ let q=this.value.toUpperCase(); let found=[]; courses.forEach(c=>{if(q.includes(c.id))found.push(c)}); if(found.length){found.forEach(c=>{if(!cart.find(x=>x.id===c.id)&&!enrolled.find(x=>x.id===c.id))cart.push(c)}); update(); render(); document.getElementById('bellaResp').innerText=`Bella: Added ${found.map(c=>c.id).join(', ')} ✅`;} else {document.getElementById('bellaResp').innerText="Bella: Try 'PAIN 101 and PHY 107'";} this.value='';}
+});
+
 render(); update();
 </script>
 </body>
